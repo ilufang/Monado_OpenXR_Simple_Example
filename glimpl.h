@@ -49,6 +49,12 @@ renderFrame(int w,
             int viewIndex,
             XrTime predictedDisplayTime);
 
+void blitNvsync(
+    int w,
+    int h,
+    GLuint framebuffer
+    );
+
 void
 genFramebuffers(int count, GLuint* framebuffers);
 

@@ -87,7 +87,7 @@ initGLX(Display** xDisplay,
 
 	maincontext = SDL_GL_CreateContext(mainwindow);
 
-	SDL_GL_SetSwapInterval(0);
+	SDL_GL_SetSwapInterval(1);
 
 	_glBlitNamedFramebuffer = (PFNGLBLITNAMEDFRAMEBUFFERPROC)glXGetProcAddressARB(
 	    (GLubyte*)"glBlitNamedFramebuffer");
@@ -310,8 +310,14 @@ renderFrame(int w,
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	if (viewIndex == 0) {
-		_glBlitNamedFramebuffer((GLuint)framebuffer, // readFramebuffer
+}
+
+void blitNvsync(
+	int w,
+	int h,
+	GLuint framebuffer
+	){
+	_glBlitNamedFramebuffer((GLuint)framebuffer, // readFramebuffer
 		                        (GLuint)0,    // backbuffer     // drawFramebuffer
 		                        (GLint)0,     // srcX0
 		                        (GLint)0,     // srcY0
@@ -324,8 +330,7 @@ renderFrame(int w,
 		                        (GLbitfield)GL_COLOR_BUFFER_BIT, // mask
 		                        (GLenum)GL_LINEAR);              // filter
 
-		SDL_GL_SwapWindow(mainwindow);
-	}
+	SDL_GL_SwapWindow(mainwindow);
 }
 
 void

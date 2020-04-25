@@ -510,7 +510,10 @@ init_openxr(xr_example* self)
 		return 1;
 	printf("Session started!\n");
 
-
+	// Hmm, do something
+	glXMakeCurrent(self->graphics_binding_gl.xDisplay,
+	               self->graphics_binding_gl.glxDrawable,
+	               self->graphics_binding_gl.glxContext);
 
 	// --- Create Swapchains
 	uint32_t swapchainFormatCount;
@@ -949,6 +952,7 @@ main_loop(xr_example* self)
 
 		XrCompositionLayerProjectionView projection_views[self->view_count];
 
+		uint32_t bufferIndex;
 		// render each eye and fill projection_views with the result
 		for (uint32_t i = 0; i < self->view_count; i++) {
 			XrMatrix4x4f projectionMatrix;
@@ -968,7 +972,7 @@ main_loop(xr_example* self)
 
 			XrSwapchainImageAcquireInfo swapchainImageAcquireInfo = {
 			    .type = XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO, .next = NULL};
-			uint32_t bufferIndex;
+			
 			result = xrAcquireSwapchainImage(
 			    self->swapchains[i], &swapchainImageAcquireInfo, &bufferIndex);
 			if (!xr_result(self->instance, result,
@@ -1028,6 +1032,10 @@ main_loop(xr_example* self)
 		result = xrEndFrame(self->session, &frameEndInfo);
 		if (!xr_result(self->instance, result, "failed to end frame!"))
 			break;
+
+		blitNvsync(self->configuration_views[1].recommendedImageRectWidth,
+			            self->configuration_views[1].recommendedImageRectHeight,
+			            self->framebuffers[1][bufferIndex]);
 	}
 }
 
